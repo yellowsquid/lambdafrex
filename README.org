@@ -15,5 +15,9 @@ agda -i. Everything.agda
 
 * Structure
 
+- ~Data~ :: Extensions to the standard library
+  - ~Vec.Membership.Reflexive~ :: ~Vec~ membership with propositional equality
+    that doesn't require axiom K.
 - ~LambdaFrex~ :: Core contributions of this library
+  - ~Bundles~ :: Records to define λ-calculus models.
   - ~Types~ :: λ-calculus types and type contexts.
