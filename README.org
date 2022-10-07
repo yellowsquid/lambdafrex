@@ -10,5 +10,5 @@ Agda library encoding a [[][free extension]] for the λ-calculus.
 * Building
 
 #+begin_src sh
-agda -I. Everything.agda
+agda -i. Everything.agda
 #+end_src
