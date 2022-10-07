@@ -23,4 +23,5 @@ agda -i. Everything.agda
 - ~LambdaFrex~ :: Core contributions of this library
   - ~Bundles~ :: Records to define λ-calculus models.
   - ~Category~ :: The category of λ-calculus models.
+  - ~Terms~ :: Term algebra for the λ-calculus
   - ~Types~ :: λ-calculus types and type contexts.
