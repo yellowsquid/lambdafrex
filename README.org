@@ -1,6 +1,6 @@
 #+title: LambdaFrex
 
-Agda library encoding a [[][free extension]] for the λ-calculus.
+Agda library encoding a [[https://www.cl.cam.ac.uk/~jdy22/projects/frex/][free extension]] for the λ-calculus.
 
 * Dependencies
 
