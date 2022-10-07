@@ -1,0 +1,14 @@
+#+title: LambdaFrex
+
+Agda library encoding a [[][free extension]] for the λ-calculus.
+
+* Dependencies
+
+- ~agda-stdlib@1.7~
+- ~agda-categories@0.1.7~
+
+* Building
+
+#+begin_src sh
+agda -I. Everything.agda
+#+end_src
