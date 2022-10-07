@@ -24,4 +24,5 @@ agda -i. Everything.agda
   - ~Bundles~ :: Records to define λ-calculus models.
   - ~Category~ :: The category of λ-calculus models.
   - ~Terms~ :: Term algebra for the λ-calculus
+    - ~Morphism~ :: Lift setoid functions to term algebra morphisms.
   - ~Types~ :: λ-calculus types and type contexts.
