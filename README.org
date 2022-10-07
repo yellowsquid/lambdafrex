@@ -12,3 +12,8 @@ Agda library encoding a [[][free extension]] for the λ-calculus.
 #+begin_src sh
 agda -i. Everything.agda
 #+end_src
+
+* Structure
+
+- ~LambdaFrex~ :: Core contributions of this library
+  - ~Types~ :: λ-calculus types and type contexts.
