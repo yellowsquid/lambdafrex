@@ -25,4 +25,5 @@ agda -i. Everything.agda
   - ~Category~ :: The category of λ-calculus models.
   - ~Terms~ :: Term algebra for the λ-calculus
     - ~Morphism~ :: Lift setoid functions to term algebra morphisms.
+    - ~Properties~ :: Prove the term algebra forms the free functor.
   - ~Types~ :: λ-calculus types and type contexts.
