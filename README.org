@@ -15,9 +15,12 @@ agda -i. Everything.agda
 
 * Structure
 
+- ~Categories~ :: Extensions to the ~agda-category~ library
+  - ~Category.Instance.IndexedSetoids~ :: Category of setoids indexed by a set.
 - ~Data~ :: Extensions to the standard library
   - ~Vec.Membership.Reflexive~ :: ~Vec~ membership with propositional equality
     that doesn't require axiom K.
 - ~LambdaFrex~ :: Core contributions of this library
   - ~Bundles~ :: Records to define λ-calculus models.
+  - ~Category~ :: The category of λ-calculus models.
   - ~Types~ :: λ-calculus types and type contexts.
