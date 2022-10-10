@@ -20,6 +20,9 @@ agda -i. Everything.agda
 - ~Data~ :: Extensions to the standard library
   - ~Vec.Membership.Reflexive~ :: ~Vec~ membership with propositional equality
     that doesn't require axiom K.
+  - ~Vec.Relation.Unary.All.Ext~ :: Additional properties of ~All~.
+  - ~Vec.Relation.Unary.All.Relation.Binary.Pointwise~ :: Pointwise relationship
+    between dependent vectors.
 - ~LambdaFrex~ :: Core contributions of this library
   - ~Bundles~ :: Records to define λ-calculus models.
   - ~Category~ :: The category of λ-calculus models.

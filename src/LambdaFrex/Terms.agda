@@ -15,6 +15,11 @@ open import Data.Fin using (zero)
 open import Data.Nat using (ℕ)
 open import Data.Vec
 open import Data.Vec.Membership.Reflexive
+open import Data.Vec.Relation.Unary.All as All
+open import Data.Vec.Relation.Unary.All.Ext
+open import Data.Vec.Relation.Unary.All.Relation.Binary.Pointwise using (Pointwise)
+
+open import Function using (_∘_)
 open import Level using (_⊔_)
 
 open import LambdaFrex.Bundles G
@@ -34,7 +39,7 @@ infixl 5 _$_
 
 data Term (Γ : Context n) : Type → Set (a ⊔ b) where
   meta  : (m : M Γ A) → Term Γ A
-  subst : (σ : Subst Term Δ Γ) → Term Δ A → Term Γ A
+  subst : (σ : All (Term Γ) Δ) → Term Δ A → Term Γ A
   var   : (A∈Γ : A ∈ Γ) → Term Γ A
   ƛ     : Term (A ∷ Γ) B → Term Γ (A ⟶ B)
   _$_   : Term Γ (A ⟶ B) → Term Γ A → Term Γ B
@@ -49,14 +54,16 @@ ops = record
 
 open Ops ops public using (weaken; wkn)
 
+infix 4 _≈_
+
 data _≈_ : IRel (λ (((n , Γ) , A) : ∃ Context × Type) → Term Γ A) (a ⊔ b ⊔ ℓ) where
   refl  : ∀ {t : Term Γ A} → t ≈ t
   sym   : ∀ {t t₁ : Term Γ A} → t ≈ t₁ → t₁ ≈ t
   trans : ∀ {t t₁ t₂ : Term Γ A} → t ≈ t₁ → t₁ ≈ t₂ → t ≈ t₂
 
   meta-cong  : ∀ {m m₁ : M Γ A} → m M.≈ᵢ m₁ → meta m ≈ meta m₁
-  subst-cong : ∀ {γ δ : Subst Term Γ Δ} {t t₁ : Term Γ A} →
-    (∀ {A} (A∈Γ : A ∈ Γ) → γ A∈Γ ≈ δ A∈Γ) → t ≈ t₁ →
+  subst-cong : ∀ {γ δ : All (Term Δ) Γ} {t t₁ : Term Γ A} →
+    Pointwise _≈_ γ δ → t ≈ t₁ →
     subst γ t ≈ subst δ t₁
   ƛ-cong     : ∀ {t t₁ : Term (A ∷ Γ) B} →
     t ≈ t₁ →
@@ -65,16 +72,17 @@ data _≈_ : IRel (λ (((n , Γ) , A) : ∃ Context × Type) → Term Γ A) (a �
     t ≈ t₂ → t₁ ≈ t₃ →
     (t $ t₁) ≈ (t₂ $ t₃)
 
-  subst-∘   : ∀ (γ : Subst Term Γ Δ) (δ : Subst Term Δ Ω) (t : Term Γ A) →
-    subst δ (subst γ t) ≈ subst (λ A∈Γ → subst δ (γ A∈Γ)) t
-  subst-var : ∀ (γ : Subst Term Γ Δ) (A∈Γ : A ∈ Γ) →
-    subst γ (var A∈Γ) ≈ γ A∈Γ
-  subst-ƛ   : ∀ (γ : Subst Term Γ Δ) (t : Term (A ∷ Γ) B) →
-    subst γ (ƛ t) ≈ ƛ (subst (cons Term (var here) (wkn γ)) t)
-  subst-$   : ∀ (γ : Subst Term Γ Δ) (t : Term Γ (A ⟶ B)) (t₁ : Term Γ A) →
-    subst γ (t $ t₁) ≈ (subst γ t $ subst γ t₁)
+  subst-∘   : ∀ (γ : All (Term Γ) Δ) (δ : All (Term Δ) Ω) (t : Term Ω A) →
+    subst γ (subst δ t) ≈ subst (All.map (subst γ) δ) t
+  subst-var : ∀ (γ : All (Term Δ) Γ) (A∈Γ : A ∈ Γ) →
+    subst γ (var A∈Γ) ≈ lookup-∈ γ A∈Γ
+  subst-ƛ   : ∀ (γ : All (Term Δ) Γ) (t : Term (A ∷ Γ) B) →
+    subst γ (ƛ t) ≈ ƛ (subst (var here ∷ wkn γ) t)
+  subst-$   : ∀ (γ : All (Term Δ) Γ) (t : Term Γ (A ⟶ B)) (t₁ : Term Γ A) →
+    subst γ (t $ t₁) ≈ subst γ t $ subst γ t₁
 
-  ⟶-β : ∀ (t : Term (A ∷ Γ) B) (t₁ : Term Γ A) → (ƛ t $ t₁) ≈ subst (cons Term t₁ var) t
+  ⟶-β : ∀ (t : Term (A ∷ Γ) B) (t₁ : Term Γ A) →
+    ƛ t $ t₁ ≈ subst (t₁ ∷ All.tabulate (var ∘ ∈-lookup)) t
   ⟶-η : ∀ (t : Term Γ (A ⟶ B)) → ƛ (weaken zero t $ var here) ≈ t
 
 equality : Equality Term _≈_ ops
@@ -92,7 +100,7 @@ equality = record
   }
 
 open Equality equality public
-  using (subst-congˡ; subst-congʳ; $-congˡ; $-congʳ)
+  using (module ≈; subst-congˡ; subst-congʳ; $-congˡ; $-congʳ)
 
 algebra : LambdaAlgebra (a ⊔ b) (a ⊔ b ⊔ ℓ)
 algebra = record { ops = ops ; equality = equality }

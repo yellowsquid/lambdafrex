@@ -8,10 +8,16 @@ open import Categories.Category.Helper
 open import Categories.Category.Instance.IndexedSetoids
   renaming (_≃_ to _≃ᵢ_)
 open import Categories.Functor
+
 open import Data.Product using (∃; _×_; _,_)
+open import Data.Vec.Relation.Unary.All
+open import Data.Vec.Relation.Unary.All.Ext
+open import Data.Vec.Relation.Unary.All.Relation.Binary.Pointwise
+
 import Function.Equality as F
 open import Level
-open import Relation.Binary.PropositionalEquality using (refl; setoid)
+
+open import Relation.Binary.PropositionalEquality using (refl; sym; setoid)
 
 open import LambdaFrex.Bundles G
 open import LambdaFrex.Types G
@@ -24,7 +30,7 @@ LambdaAlg b ℓ = categoryHelper (record
   ; id = λ {L} → let open LambdaAlgebra L in record
     { ⟦_⟧ = λ t → t
     ; cong = λ t≈t₁ → t≈t₁
-    ; subst-homo = λ _ _ → ≈.refl
+    ; subst-homo = λ γ t → subst-congˡ (reflexive ≈.reflexive (≡⇒Pointwise≡ (sym (map-id γ))))
     ; var-homo = λ _ → ≈.refl
     ; ƛ-homo = λ _ → ≈.refl
     ; $-homo = λ _ _ → ≈.refl
@@ -35,7 +41,10 @@ LambdaAlg b ℓ = categoryHelper (record
     let module g = Lambda⇒ g in record
       { ⟦_⟧ = λ t → f.⟦ g.⟦ t ⟧ ⟧
       ; cong = λ t≈t₁ → f.cong (g.cong t≈t₁)
-      ; subst-homo = λ γ t → N.≈.trans (f.cong (g.subst-homo γ t)) (f.subst-homo _ g.⟦ t ⟧)
+      ; subst-homo = λ γ t → N.≈.trans (N.≈.trans
+        (f.cong (g.subst-homo γ t))
+        (f.subst-homo (map g.⟦_⟧ γ) g.⟦ t ⟧))
+        (N.subst-congˡ (reflexive N.≈.reflexive (≡⇒Pointwise≡ (map-∘ f.⟦_⟧ g.⟦_⟧ γ))))
       ; var-homo = λ A∈Γ → N.≈.trans (f.cong (g.var-homo A∈Γ)) (f.var-homo A∈Γ)
       ; ƛ-homo = λ t → N.≈.trans (f.cong (g.ƛ-homo t)) (f.ƛ-homo g.⟦ t ⟧)
       ; $-homo = λ t t₁ → N.≈.trans (f.cong (g.$-homo t t₁)) (f.$-homo g.⟦ t ⟧ g.⟦ t₁ ⟧)

@@ -21,6 +21,10 @@ data _∈_ {a} {A : Set a} (x : A) : Vec A n → Set a where
   here  : x ∈ x ∷ xs
   there : x ∈ xs → x ∈ y ∷ xs
 
+∈-lookup : ∀ i → lookup xs i ∈ xs
+∈-lookup {xs = _ ∷ _} zero    = here
+∈-lookup {xs = _ ∷ _} (suc i) = there (∈-lookup i)
+
 ∈-insert⁺ : x ∈ xs → ∀ i {y} → x ∈ insert xs i y
 ∈-insert⁺ x∈xs         zero    = there x∈xs
 ∈-insert⁺ here         (suc i) = here
