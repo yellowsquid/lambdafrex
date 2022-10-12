@@ -18,6 +18,7 @@ agda -i. Everything.agda
 - ~Categories~ :: Extensions to the ~agda-category~ library
   - ~Category.Instance.IndexedSetoids~ :: Category of setoids indexed by a set.
 - ~Data~ :: Extensions to the standard library
+  - ~Empty.Irrel~ :: Irrelevant empty set for better propositional equality.
   - ~Vec.Membership.Reflexive~ :: ~Vec~ membership with propositional equality
     that doesn't require axiom K.
   - ~Vec.Relation.Unary.All.Ext~ :: Additional properties of ~All~.
@@ -29,4 +30,5 @@ agda -i. Everything.agda
   - ~Terms~ :: Term algebra for the λ-calculus
     - ~Morphism~ :: Lift setoid functions to term algebra morphisms.
     - ~Properties~ :: Prove the term algebra forms the free functor.
+    - ~Values~ :: Predicates for irreducible terms.
   - ~Types~ :: λ-calculus types and type contexts.
